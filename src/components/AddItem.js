@@ -9,7 +9,7 @@ export default function AddItem() {
         const formData = new FormData();
         Object.keys(item).forEach(key => formData.append(key, item[key]));
         
-        await axios.post('http://localhost:5000/api/items', formData);
+        await axios.post('https://697b6d025f4ef0af22ecfeee--curious-zabaione-43dba3.netlify.app/api/items', formData);
         alert("Item Added!");
         window.location.reload();
     };

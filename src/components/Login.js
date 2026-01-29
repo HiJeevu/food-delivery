@@ -8,7 +8,7 @@ export default function Login({ setAuth }) {
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
-            const res = await axios.post('http://localhost:5000/api/login', credentials);
+            const res = await axios.post('bymjtenlroh3v4n2pyhv-mysql.services.clever-cloud.com/api/login', credentials);
             if (res.data.success) {
                 localStorage.setItem('isAdmin', 'true'); // Simple session persistence
                 setAuth(true);

@@ -7,7 +7,7 @@ export default function ItemList() {
     const [editingItem, setEditingItem] = useState(null);
 
     const fetchItems = async () => {
-        const res = await axios.get('http://localhost:5000/api/items');
+        const res = await axios.get('https://697b6d025f4ef0af22ecfeee--curious-zabaione-43dba3.netlify.app/api/items');
         setItems(res.data);
     };
 
@@ -15,7 +15,7 @@ export default function ItemList() {
 
     const deleteItem = async (id) => {
         if (window.confirm("Delete this item?")) {
-            await axios.delete(`http://localhost:5000/api/items/${id}`);
+            await axios.delete(`https://697b6d025f4ef0af22ecfeee--curious-zabaione-43dba3.netlify.app/api/items/${id}`);
             fetchItems();
         }
     };
@@ -47,7 +47,7 @@ export default function ItemList() {
                         {items.map(item => (
                             <tr key={item.id}>
                                 <td>
-                                    <img src={`http://localhost:5000/uploads/${item.image}`} 
+                                    <img src={`https://697b6d025f4ef0af22ecfeee--curious-zabaione-43dba3.netlify.app/uploads/${item.image}`} 
                                          alt="" style={{width: '50px', borderRadius: '5px'}} />
                                 </td>
                                 <td>{item.name}</td>
