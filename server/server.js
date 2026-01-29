@@ -21,7 +21,7 @@ const db = mysql.createConnection({
 app.post('/api/login', (req, res) => {
     const { username, password } = req.body;
     const sql = "SELECT * FROM admins WHERE username = ? AND password = ?";
-    
+
     db.query(sql, [username, password], (err, result) => {
         if (err) return res.status(500).send({ message: "Server error" });
         if (result.length > 0) {
@@ -57,8 +57,57 @@ app.get('/api/items', (req, res) => {
 });
 
 // --- ORDER MANAGEMENT ---
+
+// --- PLACE ORDER (Now with Items) ---
+app.post('/api/orders', (req, res) => {
+    const { customer_name, address, phone, total_amount, cart } = req.body;
+
+    // 1. Insert into orders table first
+    const orderSql = "INSERT INTO orders (customer_name, address, phone, total_amount, status) VALUES (?, ?, ?, ?, 'Pending')";
+
+    db.query(orderSql, [customer_name, address, phone, total_amount], (err, result) => {
+        if (err) return res.status(500).send(err);
+
+        const orderId = result.insertId;
+
+        // 2. Prepare cart items for bulk insertion
+        // Format: [[orderId, name, price, qty], [orderId, name, price, qty]]
+        const itemValues = cart.map(item => [orderId, item.name, item.price, item.qty]);
+        const itemsSql = "INSERT INTO order_items (order_id, product_name, price, quantity) VALUES ?";
+
+        db.query(itemsSql, [itemValues], (err) => {
+            if (err) return res.status(500).send(err);
+            res.send({ success: true, orderId: orderId });
+        });
+    });
+});
+
 app.get('/api/orders', (req, res) => {
     db.query("SELECT * FROM orders ORDER BY order_date DESC", (err, result) => res.send(result));
+});
+
+// Get specific order status for Customer Tracking
+app.get('/api/orders/track/:id', (req, res) => {
+    const orderId = req.params.id;
+
+    // Fetch order details
+    const orderQuery = "SELECT * FROM orders WHERE id = ?";
+    db.query(orderQuery, [orderId], (err, orderResult) => {
+        if (err) return res.status(500).send(err);
+        if (orderResult.length === 0) return res.status(404).send("Order not found");
+
+        // Fetch associated items
+        const itemsQuery = "SELECT * FROM order_items WHERE order_id = ?";
+        db.query(itemsQuery, [orderId], (err, itemsResult) => {
+            if (err) return res.status(500).send(err);
+
+            // Send back combined data
+            res.send({
+                ...orderResult[0],
+                items: itemsResult
+            });
+        });
+    });
 });
 
 app.put('/api/orders/:id', (req, res) => {
