@@ -17,6 +17,21 @@ const db = mysql.createConnection({
     database: 'admin_panel'
 });
 
+// Add this route to your server.js
+app.post('/api/login', (req, res) => {
+    const { username, password } = req.body;
+    const sql = "SELECT * FROM admins WHERE username = ? AND password = ?";
+    
+    db.query(sql, [username, password], (err, result) => {
+        if (err) return res.status(500).send({ message: "Server error" });
+        if (result.length > 0) {
+            // In production, send a JWT token here
+            res.send({ success: true, user: result[0].username });
+        } else {
+            res.status(401).send({ success: false, message: "Invalid credentials" });
+        }
+    });
+});
 // Image Upload Configuration
 const storage = multer.diskStorage({
     destination: './uploads/',
