@@ -117,6 +117,30 @@ app.put('/api/orders/:id', (req, res) => {
         res.send({ message: "Status updated" });
     });
 });
+
+// Update Item (Manage Details)
+app.put('/api/items/:id', upload.single('image'), (req, res) => {
+    const { id } = req.params;
+    const { name, price, description } = req.body;
+    let sql = "";
+    let params = [];
+
+    if (req.file) {
+        // If a new image is uploaded
+        const image = req.file.filename;
+        sql = "UPDATE items SET name = ?, price = ?, description = ?, image = ? WHERE id = ?";
+        params = [name, price, description, image, id];
+    } else {
+        // If keeping the existing image
+        sql = "UPDATE items SET name = ?, price = ?, description = ? WHERE id = ?";
+        params = [name, price, description, id];
+    }
+
+    db.query(sql, params, (err, result) => {
+        if (err) return res.status(500).send(err);
+        res.send({ message: "Item updated successfully" });
+    });
+});
 // Add this below your existing item routes in server.js
 app.delete('/api/items/:id', (req, res) => {
     const id = req.params.id;
