@@ -1,38 +1,50 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import AdminDashboard from './AdminDashboard'; 
+import AuthPage from './components/AuthPage';
+import AdminDashboard from './AdminDashboard';
 import UserStore from './components/UserStore';
 
 function App() {
-    // This state simulates switching between the Customer site and Admin site
-    const [mode, setMode] = useState('user'); 
+    const [session, setSession] = useState(null);
+
+    // 1. Check if user is already logged in on page load
+    useEffect(() => {
+        const savedSession = localStorage.getItem('session');
+        if (savedSession) {
+            setSession(JSON.parse(savedSession));
+        }
+    }, []);
+
+    // 2. Function to call when login is successful
+    const handleLoginSuccess = (data) => {
+        setSession(data); // This triggers the re-render to Dashboard
+    };
+
+    const handleLogout = () => {
+        localStorage.removeItem('session');
+        setSession(null);
+    };
+
+    // 3. Conditional Rendering (The "Redirect" Logic)
+    if (!session) {
+        return <AuthPage onLoginSuccess={handleLoginSuccess} />;
+    }
 
     return (
-        <div>
-            {/* Simple Switcher Bar (For development purposes) */}
-            <div className="bg-secondary p-2 d-flex justify-content-center">
-                <span className="text-white me-3 align-self-center">View Mode:</span>
-                <div className="btn-group" role="group">
-                    <button 
-                        className={`btn btn-sm ${mode === 'user' ? 'btn-light' : 'btn-outline-light'}`} 
-                        onClick={() => setMode('user')}
-                    >
-                        Customer Storefront
-                    </button>
-                    <button 
-                        className={`btn btn-sm ${mode === 'admin' ? 'btn-light' : 'btn-outline-light'}`} 
-                        onClick={() => setMode('admin')}
-                    >
-                        Admin Dashboard
-                    </button>
-                </div>
-            </div>
+        <div className="min-vh-100 bg-light">
+            {/* Header / Logout Bar */}
+            <nav className="navbar navbar-dark bg-dark px-4">
+                <span className="navbar-brand">
+                    Welcome, {session.role === 'admin' ? 'Admin' : session.user.full_name || session.user.username}
+                </span>
+                <button className="btn btn-outline-danger btn-sm" onClick={handleLogout}>Logout</button>
+            </nav>
 
-            {/* Conditional Rendering */}
-            {mode === 'admin' ? (
-                <AdminDashboard /> 
+            {/* Show Dashboard based on Role */}
+            {session.role === 'admin' ? (
+                <AdminDashboard />
             ) : (
-                <UserStore />
+                <UserStore user={session.user} />
             )}
         </div>
     );
