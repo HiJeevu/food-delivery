@@ -1,40 +1,39 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import EditItem from './EditItem';
 
 export default function ItemList() {
     const [items, setItems] = useState([]);
+    const [editingItem, setEditingItem] = useState(null);
 
-    // Fetch items from the backend
     const fetchItems = async () => {
-        try {
-            const res = await axios.get('http://localhost:5000/api/items');
-            setItems(res.data);
-        } catch (err) {
-            console.error("Error fetching items", err);
-        }
+        const res = await axios.get('http://localhost:5000/api/items');
+        setItems(res.data);
     };
 
-    useEffect(() => {
-        fetchItems();
-    }, []);
+    useEffect(() => { fetchItems(); }, []);
 
-    // Delete item function
     const deleteItem = async (id) => {
-        if (window.confirm("Are you sure you want to delete this item?")) {
-            try {
-                await axios.delete(`http://localhost:5000/api/items/${id}`);
-                setItems(items.filter(item => item.id !== id));
-            } catch (err) {
-                alert("Error deleting item");
-            }
+        if (window.confirm("Delete this item?")) {
+            await axios.delete(`http://localhost:5000/api/items/${id}`);
+            fetchItems();
         }
     };
 
     return (
-        <div className="card p-3 shadow-sm mt-4">
-            <h5>Manage Items</h5>
-            <div className="table-responsive">
-                <table className="table table-striped align-middle">
+        <div className="mt-4">
+            {/* If an item is being edited, show the Edit Form at the top */}
+            {editingItem && (
+                <EditItem 
+                    item={editingItem} 
+                    onUpdate={() => { setEditingItem(null); fetchItems(); }} 
+                    onCancel={() => setEditingItem(null)} 
+                />
+            )}
+
+            <div className="card p-3 shadow-sm">
+                <h5>Product Inventory</h5>
+                <table className="table align-middle">
                     <thead>
                         <tr>
                             <th>Image</th>
@@ -45,30 +44,27 @@ export default function ItemList() {
                         </tr>
                     </thead>
                     <tbody>
-                        {items.length > 0 ? items.map(item => (
+                        {items.map(item => (
                             <tr key={item.id}>
                                 <td>
-                                    <img 
-                                        src={`http://localhost:5000/uploads/${item.image}`} 
-                                        alt={item.name} 
-                                        style={{ width: '50px', height: '50px', objectFit: 'cover', borderRadius: '5px' }} 
-                                    />
+                                    <img src={`http://localhost:5000/uploads/${item.image}`} 
+                                         alt="" style={{width: '50px', borderRadius: '5px'}} />
                                 </td>
                                 <td>{item.name}</td>
                                 <td>${item.price}</td>
-                                <td><small className="text-muted">{item.description}</small></td>
+                                <td className="text-truncate" style={{maxWidth: '200px'}}>{item.description}</td>
                                 <td>
-                                    <button 
-                                        className="btn btn-danger btn-sm" 
-                                        onClick={() => deleteItem(item.id)}
-                                    >
+                                    <button className="btn btn-sm btn-outline-primary me-2" 
+                                        onClick={() => setEditingItem(item)}>
+                                        Edit
+                                    </button>
+                                    <button className="btn btn-sm btn-outline-danger" 
+                                        onClick={() => deleteItem(item.id)}>
                                         Delete
                                     </button>
                                 </td>
                             </tr>
-                        )) : (
-                            <tr><td colSpan="5" className="text-center">No items found</td></tr>
-                        )}
+                        ))}
                     </tbody>
                 </table>
             </div>
