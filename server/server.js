@@ -17,18 +17,34 @@ const db = mysql.createConnection({
     database: 'admin_panel'
 });
 
-// Add this route to your server.js
-app.post('/api/login', (req, res) => {
+// --- ADMIN LOGIN ---
+app.post('/api/admin/login', (req, res) => {
     const { username, password } = req.body;
-    const sql = "SELECT * FROM admins WHERE username = ? AND password = ?";
-
-    db.query(sql, [username, password], (err, result) => {
-        if (err) return res.status(500).send({ message: "Server error" });
+    db.query("SELECT * FROM admins WHERE username = ? AND password = ?", [username, password], (err, result) => {
         if (result.length > 0) {
-            // In production, send a JWT token here
-            res.send({ success: true, user: result[0].username });
+            res.send({ success: true, role: 'admin', user: result[0] });
         } else {
-            res.status(401).send({ success: false, message: "Invalid credentials" });
+            res.status(401).send({ message: "Invalid Admin Credentials" });
+        }
+    });
+});
+
+// --- USER REGISTER & LOGIN ---
+app.post('/api/user/register', (req, res) => {
+    const { name, email, password } = req.body;
+    db.query("INSERT INTO users (full_name, email, password) VALUES (?, ?, ?)", [name, email, password], (err) => {
+        if (err) return res.status(500).send(err);
+        res.send({ success: true });
+    });
+});
+
+app.post('/api/user/login', (req, res) => {
+    const { email, password } = req.body;
+    db.query("SELECT * FROM users WHERE email = ? AND password = ?", [email, password], (err, result) => {
+        if (result.length > 0) {
+            res.send({ success: true, role: 'user', user: result[0] });
+        } else {
+            res.status(401).send({ message: "Invalid User Credentials" });
         }
     });
 });
