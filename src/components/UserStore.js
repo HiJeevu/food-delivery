@@ -63,7 +63,7 @@ export default function UserStore() {
             {/* User Navigation */}
             <nav className="navbar navbar-expand-lg navbar-light bg-white shadow-sm mb-4 px-3 rounded border">
                 <span className="navbar-brand fw-bold text-primary" style={{ cursor: 'pointer' }} onClick={continueShopping}>
-                    🚀 QuickShop
+                    🚀 My Shop
                 </span>
                 <div className="ms-auto d-flex align-items-center">
                     <button className="btn btn-link text-decoration-none me-3" onClick={() => setStep('track')}>Track Order</button>
