@@ -4,6 +4,7 @@ const multer = require('multer');
 const cors = require('cors');
 const path = require('path');
 const morgan = require('morgan');
+const serverless = require('serverless-http');
 
 const app = express();
 app.use(cors());
@@ -167,5 +168,4 @@ app.delete('/api/items/:id', (req, res) => {
         res.send({ message: "Item deleted successfully" });
     });
 });
-
-app.listen(5000, () => console.log("Server running on port 5000"));
+export const handler = serverless(app);
