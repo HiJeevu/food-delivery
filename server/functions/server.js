@@ -21,6 +21,11 @@ const db = mysql.createConnection({
 });
 
 // --- ADMIN LOGIN ---
+
+app.get('/hello', (req, res) => {
+    res.send('Hello World!');
+});
+
 app.post('/api/admin/login', (req, res) => {
     const { username, password } = req.body;
     db.query("SELECT * FROM admins WHERE username = ? AND password = ?", [username, password], (err, result) => {
