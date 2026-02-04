@@ -3,18 +3,20 @@ const mysql = require('mysql2');
 const multer = require('multer');
 const cors = require('cors');
 const path = require('path');
+const morgan = require('morgan');
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use(morgan('dev')); // Logging middleware
 app.use('/uploads', express.static('uploads')); // Serve images
 
 // MySQL Connection
 const db = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '',
-    database: 'admin_panel'
+    host: 'bpoqp2gnutcgcpgih1sw-mysql.services.clever-cloud.com',
+    user: 'updejmwe7fx8gkys',
+    password: 'QSNSsJ4VlmVF3s4rCgTH',
+    database: 'bpoqp2gnutcgcpgih1sw'
 });
 
 // --- ADMIN LOGIN ---
