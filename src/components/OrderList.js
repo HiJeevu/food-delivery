@@ -10,7 +10,7 @@ export default function OrderList() {
 
     const fetchOrders = async () => {
         try {
-            const res = await axios.get('https://697b6d025f4ef0af22ecfeee--curious-zabaione-43dba3.netlify.app/api/orders');
+            const res = await axios.get('http://localhost:5000/api/orders');
             setOrders(res.data);
         } catch (err) {
             console.error("Error fetching orders", err);
@@ -19,7 +19,7 @@ export default function OrderList() {
 
     const updateStatus = async (id, newStatus) => {
         try {
-            await axios.put(`https://697b6d025f4ef0af22ecfeee--curious-zabaione-43dba3.netlify.app/api/orders/${id}`, { status: newStatus });
+            await axios.put(`http://localhost:5000/api/orders/${id}`, { status: newStatus });
             // Update local state to reflect change immediately
             setOrders(orders.map(o => o.id === id ? { ...o, status: newStatus } : o));
             alert(`Order #${id} updated to ${newStatus}`);

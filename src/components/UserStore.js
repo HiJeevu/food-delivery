@@ -12,7 +12,7 @@ export default function UserStore() {
     const [delivery, setDelivery] = useState({ name: '', address: '', phone: '' });
 
     useEffect(() => {
-        axios.get('https://697b6d025f4ef0af22ecfeee--curious-zabaione-43dba3.netlify.app/api/items').then(res => setProducts(res.data));
+        axios.get('http://localhost:5000/api/items').then(res => setProducts(res.data));
     }, []);
 
     const addToCart = (product) => {
@@ -37,7 +37,7 @@ export default function UserStore() {
     const handleCheckout = async (e) => {
         e.preventDefault();
         try {
-            const res = await axios.post('https://697b6d025f4ef0af22ecfeee--curious-zabaione-43dba3.netlify.app/api/orders', {
+            const res = await axios.post('http://localhost:5000/api/orders', {
                 customer_name: delivery.name,
                 address: delivery.address,
                 phone: delivery.phone,
@@ -109,7 +109,7 @@ export default function UserStore() {
                     {products.map(p => (
                         <div className="col-md-4 col-sm-6 mb-4" key={p.id}>
                             <div className="card h-100 border-0 shadow-sm hover-shadow">
-                                <img src={`https://697b6d025f4ef0af22ecfeee--curious-zabaione-43dba3.netlify.app/uploads/${p.image}`} className="card-img-top" alt={p.name} style={{ height: '180px', objectFit: 'cover' }} />
+                                <img src={`http://localhost:5000/uploads/${p.image}`} className="card-img-top" alt={p.name} style={{ height: '180px', objectFit: 'cover' }} />
                                 <div className="card-body">
                                     <h5 className="card-title">{p.name}</h5>
                                     <p className="card-text text-muted small">{p.description}</p>

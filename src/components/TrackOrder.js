@@ -11,7 +11,7 @@ export default function TrackOrder() {
         if (!orderId) return;
         setLoading(true);
         try {
-            const res = await axios.get(`https://697b6d025f4ef0af22ecfeee--curious-zabaione-43dba3.netlify.app/api/orders/track/${orderId}`);
+            const res = await axios.get(`http://localhost:5000/api/orders/track/${orderId}`);
             setOrderData(res.data);
         } catch (err) {
             alert("Order ID not found. Please check your ID.");

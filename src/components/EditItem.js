@@ -14,7 +14,7 @@ export default function EditItem({ item, onUpdate, onCancel }) {
         if (newImage) data.append('image', newImage);
 
         try {
-            await axios.put(`https://697b6d025f4ef0af22ecfeee--curious-zabaione-43dba3.netlify.app/api/items/${item.id}`, data);
+            await axios.put(`http://localhost:5000/api/items/${item.id}`, data);
             alert("Item updated!");
             onUpdate(); // Refresh the list
         } catch (err) {

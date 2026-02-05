@@ -8,8 +8,8 @@ export default function AuthPage({ onLoginSuccess }) {
 
     const handleAuth = async (e) => {
         e.preventDefault();
-        let url = isAdmin ? 'https://697b6d025f4ef0af22ecfeee--curious-zabaione-43dba3.netlify.app//api/admin/login' : 'https://697b6d025f4ef0af22ecfeee--curious-zabaione-43dba3.netlify.app//api/user/login';
-        if (isRegister) url = 'https://697b6d025f4ef0af22ecfeee--curious-zabaione-43dba3.netlify.app//api/user/register';
+        let url = isAdmin ? 'http://localhost:5000/api/admin/login' : 'http://localhost:5000/api/user/login';
+        if (isRegister) url = 'http://localhost:5000/api/user/register';
 
         try {
             const res = await axios.post(url, form);
