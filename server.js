@@ -1,11 +1,14 @@
 require('dotenv').config();
 const express = require('express');
+const http = require('http');
 const multer = require('multer');
 const cors = require('cors');
 const path = require('path');
 const morgan = require('morgan');
 const mysql = require('mysql2/promise');
 const { Server } = require('socket.io');
+const app = express();
+const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
         origin: process.env.FRONTEND_URL || "http://localhost:5173",
@@ -15,7 +18,6 @@ const io = new Server(server, {
     transports: ['websocket', 'polling']
 });
 
-const app = express();
 app.use(cors('https://food-delivery-user-2bqq.onrender.com/'));
 app.use(express.json());
 app.use(morgan('dev')); // Logging middleware
