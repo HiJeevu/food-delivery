@@ -1,5 +1,4 @@
 const express = require('express');
-const mysql = require('mysql2');
 const multer = require('multer');
 const cors = require('cors');
 const path = require('path');
@@ -10,7 +9,39 @@ app.use(cors());
 app.use(express.json());
 app.use(morgan('dev')); // Logging middleware
 app.use('/uploads', express.static('uploads')); // Serve images
+const mysql = require('mysql2/promise');
 
+const db = mysql.createPool({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+    port: process.env.DB_PORT || 3306,
+
+    // 1. SSL is MANDATORY for cloud databases like Aiven
+    ssl: {
+        rejectUnauthorized: false
+    },
+
+    // 2. Pool settings to prevent 'PROTOCOL_CONNECTION_LOST'
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0,
+    enableKeepAlive: true,
+    keepAliveInitialDelay: 10000 // 10 seconds
+});
+
+// Test the connection immediately on startup
+async function testConnection() {
+    try {
+        const connection = await db.getConnection();
+        console.log("Successfully connected to MySQL Database.");
+        connection.release();
+    } catch (err) {
+        console.error("Database connection failed:", err.message);
+    }
+}
+testConnection();
 // MySQL Connection
 // const db = mysql.createConnection({
 //     host: 'localhost',
@@ -18,12 +49,6 @@ app.use('/uploads', express.static('uploads')); // Serve images
 //     password: '',
 //     database: 'admin_panel'
 // });
-const db = mysql.createConnection({
-    host: 'bpoqp2gnutcgcpgih1sw-mysql.services.clever-cloud.com',
-    user: 'updejmwe7fx8gkys',
-    password: 'QSNSsJ4VlmVF3s4rCgTH',
-    database: 'bpoqp2gnutcgcpgih1sw'
-});
 
 // --- ADMIN LOGIN ---
 app.post('/api/admin/login', (req, res) => {
