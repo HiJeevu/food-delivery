@@ -10,11 +10,17 @@ app.use(express.json());
 app.use('/uploads', express.static('uploads')); // Serve images
 
 // MySQL Connection
+// const db = mysql.createConnection({
+//     host: 'localhost',
+//     user: 'root',
+//     password: '',
+//     database: 'admin_panel'
+// });
 const db = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '',
-    database: 'admin_panel'
+    host: 'bpoqp2gnutcgcpgih1sw-mysql.services.clever-cloud.com',
+    user: 'updejmwe7fx8gkys',
+    password: 'QSNSsJ4VlmVF3s4rCgTH',
+    database: 'bpoqp2gnutcgcpgih1sw'
 });
 
 // --- ADMIN LOGIN ---
