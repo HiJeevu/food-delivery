@@ -5,7 +5,7 @@ const path = require('path');
 const morgan = require('morgan');
 
 const app = express();
-app.use(cors());
+app.use(cors('https://food-delivery-user-2bqq.onrender.com/'));
 app.use(express.json());
 app.use(morgan('dev')); // Logging middleware
 app.use('/uploads', express.static('uploads')); // Serve images
