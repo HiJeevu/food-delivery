@@ -1,15 +1,16 @@
+require('dotenv').config();
 const express = require('express');
 const multer = require('multer');
 const cors = require('cors');
 const path = require('path');
 const morgan = require('morgan');
+const mysql = require('mysql2/promise');
 
 const app = express();
 app.use(cors('https://food-delivery-user-2bqq.onrender.com/'));
 app.use(express.json());
 app.use(morgan('dev')); // Logging middleware
 app.use('/uploads', express.static('uploads')); // Serve images
-const mysql = require('mysql2/promise');
 
 const db = mysql.createPool({
     host: process.env.DB_HOST,
