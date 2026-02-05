@@ -5,6 +5,7 @@ const cors = require('cors');
 const path = require('path');
 const morgan = require('morgan');
 const mysql = require('mysql2/promise');
+const { Server } = require('socket.io');
 const io = new Server(server, {
     cors: {
         origin: process.env.FRONTEND_URL || "http://localhost:5173",
