@@ -3,6 +3,13 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import AuthPage from './components/AuthPage';
 import AdminDashboard from './AdminDashboard';
 import UserStore from './components/UserStore';
+import io from 'socket.io-client';
+const SOCKET_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+
+export const socket = io(SOCKET_URL, {
+    transports: ['websocket', 'polling'], // Fallback to polling if WS fails
+    withCredentials: true
+});
 
 function App() {
     const [session, setSession] = useState(null);
