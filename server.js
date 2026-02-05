@@ -5,6 +5,14 @@ const cors = require('cors');
 const path = require('path');
 const morgan = require('morgan');
 const mysql = require('mysql2/promise');
+const io = new Server(server, {
+    cors: {
+        origin: process.env.FRONTEND_URL || "http://localhost:5173",
+        methods: ["GET", "POST"],
+        credentials: true
+    },
+    transports: ['websocket', 'polling']
+});
 
 const app = express();
 app.use(cors('https://food-delivery-user-2bqq.onrender.com/'));
